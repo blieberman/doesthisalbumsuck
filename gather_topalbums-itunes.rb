@@ -13,10 +13,11 @@ artists = client[:artists]
 results = artists.find()
 results.each do |artist|
   artistName = artist["name"]
-  puts artistName
+#  puts artistName
 
-  #aNPrepped = artistName.gsub! ' ', '+'
+  aNPrepped = artistName.gsub! ' ', '+'
   aNPrepped = URI.escape(artistName)
+  puts aNPrepped
 
   # prep itunes api http request
   itunes_url = "https://itunes.apple.com/search?term=#{ aNPrepped }&entity=album&limit=1&order=recent"
@@ -31,11 +32,10 @@ results.each do |artist|
 
   #iterate through the albums
   itunes_result['results'].each do |album|
-    albumName = ""
     albumName = album['collectionName']
     puts albumName
 
-    doc = artists.find(:name => artistName).
+    doc = artists.find(:name => album['artistName']).
     find_one_and_update({ '$set' => { :albums => albumName }}, :return_document => :after)
     doc
   end
