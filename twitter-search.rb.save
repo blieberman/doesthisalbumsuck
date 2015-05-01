@@ -38,9 +38,9 @@ results.each do |artist|
     twitterHandle = name
   end
 
-  searchText = "#{ twitterHandle } " + albumName + "-filter:retweets -filter:links"
+  searchText = "#{ twitterHandle } " + albumName + "-filter:retweets -filter:links -filter:replies"
 
-  client.search(searchText, lang: "en", result_type: "recent").take(2000).each do |tweet|
+  client.search(searchText, lang: "en").take(2000).each do |tweet|
     documents.insert_one({"album" => artist["albums"],
                           "artist" => artist["name"],
                           "timecreated" => tweet.created_at.day.to_s+"/"+tweet.created_at.month.to_s+"/"+tweet.created_at.year.to_s, 
