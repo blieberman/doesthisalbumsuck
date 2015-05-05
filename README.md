@@ -1,1 +1,1 @@
-# doesthisalbumsuck
+I implement an approach to collect, parse and analyze Twitter sentiment for albums of popular music recording artists. With the use of The Natural Language Toolkit (NLTK) to create a Naïve Bayes classifier on a modified training collection, I achieved above 68% accuracy. I present the methodologies and technologies in order to achieve such results and use this classifier on a large set of tweets.
