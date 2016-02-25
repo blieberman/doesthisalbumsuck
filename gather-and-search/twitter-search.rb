@@ -18,9 +18,9 @@ db = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'music')
 documents = db[:tweets]
 artists = db[:artists]
 
-minr = 0.85
+minr = 0.902
 
-results = artists.find({ popularity: {"$gt" => minr} })
+results = artists.find({ popularity: {"$lt" => minr} })
 results.each do |artist|
   name = artist["name"]
   albumName = artist["albums"]
@@ -34,13 +34,14 @@ results.each do |artist|
     next
   end
 
-  if twitterHandle.to_s == ''
-    twitterHandle = name
-  end
+   if twitterHandle.to_s == ''
+     twitterHandle = name
+   end
 
-  searchText = "#{ twitterHandle } " + albumName + "-filter:retweets -filter:links"
+  searchText = "#{ twitterHandle } " + albumName + " -filter:retweets -filter:links -http"
+#  searchText = "#{ name } " + albumName + " -filter:links -filter:retweets -bit"
 
-  client.search(searchText, lang: "en", result_type: "recent").take(2000).each do |tweet|
+  client.search(searchText, lang: "en").take(400).each do |tweet|
     documents.insert_one({"album" => artist["albums"],
                           "artist" => artist["name"],
                           "timecreated" => tweet.created_at.day.to_s+"/"+tweet.created_at.month.to_s+"/"+tweet.created_at.year.to_s, 

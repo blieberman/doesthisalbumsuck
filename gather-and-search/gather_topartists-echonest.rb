@@ -53,8 +53,9 @@ topArtist_result['response']['artists'].each do |artist|
   puts callCount
   callCount += 1
   if callCount >= 115
-    puts "SLEEPING TO AVOID RATE LIMIT..."
-    sleep 20
-    callCount = 0
+#    puts "SLEEPING TO AVOID RATE LIMIT..."
+#    sleep 20
+#    callCount = 0
+    break
   end
 end

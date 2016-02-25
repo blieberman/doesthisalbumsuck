@@ -84,29 +84,34 @@ client = MongoClient('localhost', 27017)
 db = client.music
 collection = db.tweets
 
-count = 0 
-for tweet in collection.find():
 
-  artist = tweet.get("artist")
-  message = tweet.get("message")
-  albumName = tweet.get("album")
+for a in db.artists.find():
+  artist = a.get("name")
+  albumName = a.get("albums")
+  count = 0
+  
+  for message in collection.find( { "artist": artist } ).distinct("message"):
+    print artist
+    print albumName
+    print message
 
-  print artist
+    s = ''
+    for c in message:
+      if c in whitelist:
+        s += c
+      else:
+        s += ''
+    s = removeShortWords(s)
+    s = s.lower()
+    s = removeWords(s, albumName.lower())
+    s = s.replace(artist.lower(), "")
+    
+    print s
 
-  s = ''
-  for c in message:
-    if c in whitelist:
-      s += c
-    else:
-      s += ''
-  s = removeShortWords(s)
-  s = s.lower()
-  s = removeWords(s, albumName.lower())
+    sNum = classifier.classify(extractFeatures(message.split()))
+    sNum = sNum.replace("'", "")
 
-  sNum = classifier.classify(extractFeatures(message.split()))
-  sNum = sNum.replace("'", "")
-
-  collection.find_and_modify( query={"message" : message}, update={"$set": {"sentiment": sNum}}, upsert=False, full_response=True)
-  print sNum
-  count +=1
-  print count
+    collection.find_and_modify( query={"message" : message}, update={"$set": {"sentiment": sNum}}, upsert=False, full_response=True)
+    print sNum
+    count +=1
+    print count

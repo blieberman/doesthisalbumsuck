@@ -12,10 +12,9 @@ results.each do |artist|
   albumName = artist["albums"]
   puts albumName
 
-  if albumName.to_s != '' and albumName.is_a? String
+  if albumName.to_s != '' and albumName.is_a? String and !albumName.nil?
     albumStripped = albumName.split(" - ")[0]
     albumStripped = albumStripped.sub /\s*\(.+\)$/, ''
-#    albumStripped = albumStripped.split(" / ")[0]
     puts albumStripped
   end
 
